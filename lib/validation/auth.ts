@@ -4,7 +4,10 @@ const bdPhoneRegex = /^01[3-9]\d{8}$/;
 
 export const signupSchema = yup.object({
   name: yup.string().required(),
-  phone: yup.string().matches(bdPhoneRegex, "Invalid BD number").required(),
+  phone: yup
+    .string()
+    .matches(bdPhoneRegex, "Invalid BD Phone number")
+    .required(),
   password: yup.string().min(6).required(),
   confirmPassword: yup
     .string()
@@ -12,6 +15,9 @@ export const signupSchema = yup.object({
 });
 
 export const loginSchema = yup.object({
-  phone: yup.string().matches(bdPhoneRegex).required(),
+  phone: yup
+    .string()
+    .matches(bdPhoneRegex, "Invalid BD Phone number")
+    .required(),
   password: yup.string().required(),
 });

@@ -34,7 +34,7 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider>
             <Topbar />
-            {children}
+            <main className="mx-auto max-w-7xl">{children}</main>
             <Toaster />
           </ThemeProvider>
         </QueryProvider>

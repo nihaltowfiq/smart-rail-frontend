@@ -39,8 +39,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       document.cookie = `auth_token=${data.token}`;
       router.push("/");
     },
-    onError: (e) => {
-      toast.error(e.message);
+    onError: (e: any) => {
+      console.log({ e });
+
+      toast.error(e.response?.data?.message);
     },
   });
 

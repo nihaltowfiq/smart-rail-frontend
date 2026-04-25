@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export type User = {
   name: string;
   phone: string;
@@ -17,5 +19,7 @@ export const getUser = (): User | null => {
 };
 
 export const clearUser = () => {
+  Cookies.remove("auth_token");
+
   localStorage.removeItem(KEY);
 };
