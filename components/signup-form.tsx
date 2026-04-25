@@ -34,7 +34,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   const mutation = useMutation({
     mutationFn: signup,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       saveUser(data);
       document.cookie = `auth_token=${data.token}`;
       router.push("/");

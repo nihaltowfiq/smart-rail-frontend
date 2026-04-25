@@ -38,7 +38,7 @@ export function LoginForm({
 
   const mutation = useMutation({
     mutationFn: signin,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       saveUser(data);
       document.cookie = `auth_token=${data.token}`;
       router.push("/");
