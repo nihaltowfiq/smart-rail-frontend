@@ -36,13 +36,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     mutationFn: signup,
     onSuccess: ({ data }) => {
       saveUser(data);
-      document.cookie = `auth_token=${data.token}`;
       router.push("/");
     },
     onError: (e: any) => {
-      console.log({ e });
-
-      toast.error(e.response?.data?.message);
+      toast.error(e?.response?.data?.message || "Something went wrong");
     },
   });
 

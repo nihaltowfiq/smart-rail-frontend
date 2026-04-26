@@ -12,12 +12,10 @@ export function proxy(req: NextRequest) {
   const isPublic = PUBLIC_ROUTES.includes(pathname);
   const isPrivate = PRIVATE_ROUTES.includes(pathname);
 
-  // Not logged in → block private
   if (!token && isPrivate) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 
-  // Logged in → block auth pages
   if (token && isPublic) {
     return NextResponse.redirect(new URL("/", req.url));
   }

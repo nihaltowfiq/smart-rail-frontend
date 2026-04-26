@@ -1,14 +1,10 @@
 import Cookies from "js-cookie";
-
-export type User = {
-  name: string;
-  phone: string;
-  token: string;
-};
+import { User } from "./types";
 
 const KEY = "smartrail_user";
 
 export const saveUser = (user: User) => {
+  Cookies.set("auth_token", user, { expires: 30 });
   localStorage.setItem(KEY, JSON.stringify(user));
 };
 
@@ -20,6 +16,7 @@ export const getUser = (): User | null => {
 
 export const clearUser = () => {
   Cookies.remove("auth_token");
-
-  localStorage.removeItem(KEY);
+  if (typeof window !== "undefined") {
+    localStorage?.removeItem?.(KEY);
+  }
 };

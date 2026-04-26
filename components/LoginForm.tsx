@@ -40,12 +40,10 @@ export function LoginForm({
     mutationFn: signin,
     onSuccess: ({ data }) => {
       saveUser(data);
-      document.cookie = `auth_token=${data.token}`;
       router.push("/");
     },
     onError: (e: any) => {
-      console.log({ e });
-      toast.error(e.response?.data?.message);
+      toast.error(e?.response?.data?.message || "Something went wrong");
     },
   });
 
@@ -60,9 +58,9 @@ export function LoginForm({
         </CardHeader>
         <CardContent>
           <form
+            autoComplete="off"
+            autoCorrect="off"
             onSubmit={form.handleSubmit((data) => {
-              console.log({ data });
-
               mutation.mutate(data);
             })}
           >
@@ -71,8 +69,11 @@ export function LoginForm({
                 <FieldLabel htmlFor="phone">Phone</FieldLabel>
                 <Input
                   id="phone"
-                  placeholder="01XXXXXXXXX"
                   required
+                  type="number"
+                  placeholder="01XXXXXXXXX"
+                  autoComplete="off"
+                  autoCorrect="off"
                   {...form.register("phone")}
                 />
                 {form.formState.errors.phone && (
