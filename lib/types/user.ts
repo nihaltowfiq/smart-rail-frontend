@@ -5,4 +5,5 @@ export type User = {
   role: "user" | "admin";
   created_at: Date;
   name: string;
+  token?: string;
 };

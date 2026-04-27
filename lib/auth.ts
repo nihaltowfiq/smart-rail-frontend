@@ -4,7 +4,7 @@ import { User } from "./types";
 const KEY = "smartrail_user";
 
 export const saveUser = (user: User) => {
-  Cookies.set("auth_token", user, { expires: 30 });
+  Cookies.set("auth_token", user?.token, { expires: 30 });
   localStorage.setItem(KEY, JSON.stringify(user));
 };
 
