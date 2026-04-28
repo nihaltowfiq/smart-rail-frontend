@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchTrainParams } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +13,7 @@ import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { ChevronDown, Loader2 } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 const CITIES = [
   "Dhaka",
@@ -31,19 +32,26 @@ const CLASSES = ["AC", "NON_AC"];
 
 type Props = {
   setTrains: Dispatch<SetStateAction<any>>;
+  searchParams: SearchTrainParams;
+  setSearchParams: Dispatch<SetStateAction<SearchTrainParams>>;
+  resetBookings?: () => void;
 };
 
-export function TrainSearchForm({ setTrains }: Props) {
-  const [from, setFrom] = useState<string>("");
-  const [to, setTo] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [classType, setClassType] = useState<string>("");
-
+export function TrainSearchForm({
+  setTrains,
+  searchParams,
+  resetBookings,
+  setSearchParams,
+}: Props) {
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => api.post("/trains/search", data),
   });
 
-  // Get next 7 days
+  const handleParamChange = (key: keyof SearchTrainParams, value: string) => {
+    resetBookings();
+    setSearchParams({ ...searchParams, [key]: value });
+  };
+
   const getDateRange = () => {
     const dates = [];
     const today = new Date();
@@ -60,10 +68,20 @@ export function TrainSearchForm({ setTrains }: Props) {
   const maxDate = availableDates[availableDates.length - 1];
 
   const handleSearch = () => {
-    if (from && to && date && classType) {
-      console.log({ from, to, date, classType });
+    if (
+      searchParams.from &&
+      searchParams.to &&
+      searchParams.date &&
+      searchParams.classType
+    ) {
+      console.log(searchParams);
       mutate(
-        { from, to, date, class: classType },
+        {
+          from: searchParams.from,
+          to: searchParams.to,
+          date: searchParams.date,
+          class: searchParams.classType,
+        },
         {
           onSuccess: ({ data }) => {
             setTrains(data?.data);
@@ -86,16 +104,19 @@ export function TrainSearchForm({ setTrains }: Props) {
                 variant="outline"
                 className={cn(
                   "w-full justify-between",
-                  !from && "text-muted-foreground"
+                  !searchParams.from && "text-muted-foreground"
                 )}
               >
-                {from || "Select departure city"}
+                {searchParams.from || "Select departure city"}
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full" align="start">
               {CITIES.map((city) => (
-                <DropdownMenuItem key={city} onClick={() => setFrom(city)}>
+                <DropdownMenuItem
+                  key={city}
+                  onClick={() => handleParamChange("from", city)}
+                >
                   {city}
                 </DropdownMenuItem>
               ))}
@@ -111,16 +132,19 @@ export function TrainSearchForm({ setTrains }: Props) {
                 variant="outline"
                 className={cn(
                   "w-full justify-between",
-                  !to && "text-muted-foreground"
+                  !searchParams.to && "text-muted-foreground"
                 )}
               >
-                {to || "Select destination city"}
+                {searchParams.to || "Select destination city"}
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full" align="start">
               {CITIES.map((city) => (
-                <DropdownMenuItem key={city} onClick={() => setTo(city)}>
+                <DropdownMenuItem
+                  key={city}
+                  onClick={() => handleParamChange("to", city)}
+                >
                   {city}
                 </DropdownMenuItem>
               ))}
@@ -132,8 +156,8 @@ export function TrainSearchForm({ setTrains }: Props) {
           <Label htmlFor="date">Date of Journey</Label>
           <input
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={searchParams.date}
+            onChange={(e) => handleParamChange("date", e.target.value)}
             min={minDate}
             max={maxDate}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -148,16 +172,19 @@ export function TrainSearchForm({ setTrains }: Props) {
                 variant="outline"
                 className={cn(
                   "w-full justify-between",
-                  !classType && "text-muted-foreground"
+                  !searchParams.classType && "text-muted-foreground"
                 )}
               >
-                {classType || "Select class"}
+                {searchParams.classType || "Select class"}
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-full" align="start">
               {CLASSES.map((cls) => (
-                <DropdownMenuItem key={cls} onClick={() => setClassType(cls)}>
+                <DropdownMenuItem
+                  key={cls}
+                  onClick={() => handleParamChange("classType", cls)}
+                >
                   {cls}
                 </DropdownMenuItem>
               ))}
@@ -167,7 +194,13 @@ export function TrainSearchForm({ setTrains }: Props) {
 
         <Button
           onClick={handleSearch}
-          disabled={!from || !to || !date || !classType}
+          disabled={
+            !searchParams.from ||
+            !searchParams.to ||
+            !searchParams.date ||
+            !searchParams.classType ||
+            isPending
+          }
           className="mt-6 w-full"
         >
           {isPending && <Loader2 className="animate-spin" />}

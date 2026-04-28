@@ -35,7 +35,7 @@ export default function RootLayout({
           <ThemeProvider>
             <Topbar />
             <main className="mx-auto max-w-7xl">{children}</main>
-            <Toaster />
+            <Toaster position="top-center" />
           </ThemeProvider>
         </QueryProvider>
       </body>
