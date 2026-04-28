@@ -21,6 +21,7 @@ export function SeatSelector({
   date,
   classType,
   scheduleId,
+  fare,
 }) {
   const [selectedCoach, setSelectedCoach] = useState(
     data?.[0]?.coachId || null
@@ -76,7 +77,7 @@ export function SeatSelector({
   return (
     <div className="mx-auto mb-7 space-y-4 px-2">
       <div className="flex items-end gap-2">
-        <div className="max-w-1/4 space-y-2">
+        <div className="max-w-1/6 space-y-2">
           <label className="text-sm font-medium">Select Coach</label>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -104,42 +105,50 @@ export function SeatSelector({
           </DropdownMenu>
         </div>
 
-        <div className="ml-auto flex flex-wrap gap-2">
-          {selected && selected.length > 0 ? (
-            <>
-              <span className="inline-flex items-center text-sm font-medium">
-                Seats:
-              </span>
-              {selected.map((seatId) => {
-                let seat = null;
-                let coachLabel = null;
+        <div className="ml-auto flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap gap-2">
+            {selected && selected.length > 0 ? (
+              <>
+                <span className="inline-flex items-center text-sm font-medium">
+                  Seats:
+                </span>
+                {selected.map((seatId) => {
+                  let seat = null;
+                  let coachLabel = null;
 
-                for (const coach of data) {
-                  const foundSeat = coach.seats?.find(
-                    (s) => s.seatId === seatId
-                  );
-                  if (foundSeat) {
-                    seat = foundSeat;
-                    coachLabel = coach.coachLabel;
-                    break;
+                  for (const coach of data) {
+                    const foundSeat = coach.seats?.find(
+                      (s) => s.seatId === seatId
+                    );
+                    if (foundSeat) {
+                      seat = foundSeat;
+                      coachLabel = coach.coachLabel;
+                      break;
+                    }
                   }
-                }
 
-                return (
-                  <Badge
-                    variant="outline"
-                    key={seatId}
-                    className="inline-flex h-8 items-center bg-blue-50 px-3 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-                  >
-                    {coachLabel}-{seat?.number}
-                  </Badge>
-                );
-              })}
-            </>
-          ) : (
-            <span className="text-sm text-muted-foreground">
-              No seats selected
-            </span>
+                  return (
+                    <Badge
+                      variant="outline"
+                      key={seatId}
+                      className="inline-flex h-8 items-center bg-blue-50 px-3 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                    >
+                      {coachLabel}-{seat?.number}
+                    </Badge>
+                  );
+                })}
+              </>
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                No seats selected
+              </span>
+            )}
+          </div>
+
+          {selected && selected.length > 0 && (
+            <div className="rounded-md bg-blue-50 px-3 py-2 text-sm font-semibold whitespace-nowrap text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+              Total: ৳{(parseFloat(fare) * selected.length).toFixed(2)}
+            </div>
           )}
         </div>
 
@@ -151,10 +160,12 @@ export function SeatSelector({
               journeyDate: date,
               classType,
               seatIds: selected,
+              totalAmount: Number(
+                (parseFloat(fare) * selected.length).toFixed(2)
+              ),
             })
           }
         >
-          {" "}
           {isPending && <Loader2 className="animate-spin" />} Purchase
         </Button>
       </div>

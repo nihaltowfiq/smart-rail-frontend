@@ -79,6 +79,22 @@ export default function Page() {
                   <p>
                     {train.from_station} → {train.to_station}
                   </p>
+                  <div className="my-3 grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Fare</p>
+                      <p className="font-semibold">৳{train.fare}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Total Seats</p>
+                      <p className="font-semibold">{train.total_seat_count}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Available Seats</p>
+                      <p className="font-semibold">
+                        {train.total_available_seats_count}
+                      </p>
+                    </div>
+                  </div>
                   <Button
                     variant="secondary"
                     onClick={() => handleBookNow(train.schedule_id)}
@@ -100,6 +116,7 @@ export default function Page() {
                     scheduleId={scheduleId}
                     date={searchParams?.date}
                     classType={searchParams?.classType}
+                    fare={train.fare}
                     data={seatsResponse?.data}
                     selected={selected}
                     setSelected={setSelected}
