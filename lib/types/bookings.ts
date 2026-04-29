@@ -26,3 +26,13 @@ export type BookingResponse = {
     transaction_id: string | null;
   };
 };
+
+export type BookingsListResponse = {
+  data: BookingResponse[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+};
