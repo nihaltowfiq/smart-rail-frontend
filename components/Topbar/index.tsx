@@ -23,31 +23,30 @@ export function Topbar() {
   const router = useRouter();
   const user = useUser();
 
-  console.log({ user });
-
   const handleSignOut = () => {
     clearUser();
     router.push("/signin");
   };
 
   return (
-    <div className="w-full border-b bg-background">
+    <div className="w-full border-b bg-white/10 backdrop-blur-2xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <Link href="/" className="text-xl font-semibold tracking-tight">
           SmartRail
         </Link>
-
-        <div className="hidden items-center gap-6 md:flex">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
+        {user?.token && (
+          <div className="hidden items-center gap-6 md:flex">
+            {menuItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center gap-2">
           {!user ? (

@@ -30,11 +30,11 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body>
+      <body className="min-h-[calc(100vh-65px)]">
         <QueryProvider>
           <ThemeProvider>
             <Topbar />
-            <main className="mx-auto max-w-7xl">{children}</main>
+            <main>{children}</main>
             <Toaster position="top-center" />
           </ThemeProvider>
         </QueryProvider>

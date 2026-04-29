@@ -10,6 +10,7 @@ import { api } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { ChevronDown, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
@@ -26,6 +27,7 @@ export function SeatSelector({
   const [selectedCoach, setSelectedCoach] = useState(
     data?.[0]?.coachId || null
   );
+  const router = useRouter();
 
   const toggle = (seat) => {
     console.log({ seat });
@@ -65,14 +67,18 @@ export function SeatSelector({
       const res = await api.post("/bookings", payload);
       return res.data;
     },
-    onSuccess: (data) => {
-      console.log(data);
-      toast.success("Your seat has been booked!");
+    onSuccess: ({ data }) => {
+      toast.success(
+        "Your seat has been booked. To confirm please make the payment!"
+      );
+      router.push(`/confirm/${data?.bookingId}`);
     },
     onError: (e: any) => {
       toast.error(e?.response?.data?.message || "Something went wrong");
     },
   });
+
+  console.log({ selected });
 
   return (
     <div className="mx-auto mb-7 space-y-4 px-2">
@@ -139,7 +145,7 @@ export function SeatSelector({
                 })}
               </>
             ) : (
-              <span className="text-sm text-muted-foreground">
+              <span className="inline-flex h-8 items-center text-sm text-muted-foreground">
                 No seats selected
               </span>
             )}
@@ -153,7 +159,7 @@ export function SeatSelector({
         </div>
 
         <Button
-          disabled={selected?.length === 0}
+          disabled={!selected || selected?.length === 0}
           onClick={() =>
             purchase({
               scheduleId,
