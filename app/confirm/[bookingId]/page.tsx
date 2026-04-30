@@ -274,7 +274,6 @@ export default function BookingConfirmPage() {
               </div>
             </Card>
 
-            {/* Payment Status Card */}
             <Card className="border-0 shadow-md">
               <div className="p-6">
                 <h3 className="mb-4 text-lg font-semibold text-gray-900">
