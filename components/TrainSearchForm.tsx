@@ -21,7 +21,6 @@ const CITIES = [
   "Sylhet",
   "Rajshahi",
   "Khulna",
-  "Barisal",
   "Cumilla",
   "Noakhali",
   "Rangpur",
@@ -145,7 +144,7 @@ export function TrainSearchForm({
                   key={city}
                   onClick={() => handleParamChange("to", city)}
                 >
-                  {city}
+                  {city?.replace("_", " ")}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

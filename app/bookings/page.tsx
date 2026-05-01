@@ -220,24 +220,19 @@ export default function BookingsPage() {
                 </Card>
               );
 
-              return <div key={booking.bookingId}>{cardContent}</div>;
-
-              // return isPending ? (
-              //   <Link
-              //     key={booking.bookingId}
-              //     href={`/confirm/${booking.bookingId}`}
-              //     className="mb-12 space-y-3"
-              //   >
-              //     {cardContent}
-              //   </Link>
-              // ) : (
-              //   <div key={booking.bookingId}>{cardContent}</div>
-              // );
+              return isPending ? (
+                <div key={booking.bookingId}>
+                  <Link href={`/confirm/${booking.bookingId}`}>
+                    {cardContent}
+                  </Link>
+                </div>
+              ) : (
+                <div key={booking.bookingId}>{cardContent}</div>
+              );
             })}
           </div>
         )}
 
-        {/* Pagination */}
         {meta && meta.totalPages > 1 && (
           <div className="mt-8 flex items-center justify-center gap-4">
             <Button
@@ -282,7 +277,6 @@ export default function BookingsPage() {
           </div>
         )}
 
-        {/* Page Info */}
         {meta && (
           <div className="mt-4 text-center text-sm text-gray-600">
             Showing page <span className="font-semibold">{meta.page}</span> of{" "}

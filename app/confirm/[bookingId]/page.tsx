@@ -1,12 +1,13 @@
 "use client";
 
+import { PaymentDialog } from "@/components/PaymentDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api } from "@/lib/api/client";
 import { BookingResponse } from "@/lib/types";
 import { formatDate, formatTime } from "@/lib/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   AlertCircle,
   Armchair,
@@ -21,13 +22,13 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function BookingConfirmPage() {
   const params = useParams();
-  const router = useRouter();
   const bookingId = params.bookingId as string;
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
 
   const {
     data: booking,
@@ -40,22 +41,6 @@ export default function BookingConfirmPage() {
       return res.data?.data as BookingResponse;
     },
     enabled: !!bookingId,
-  });
-
-  const { mutate: makePayment, isPending } = useMutation({
-    mutationFn: async () => {
-      const res = await api.post(`/bookings/payment/${bookingId}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Payment completed successfully!");
-      router.replace("/bookings");
-    },
-    onError: (e: any) => {
-      toast.error(
-        e?.response?.data?.message || "Payment failed. Please try again."
-      );
-    },
   });
 
   if (loading) {
@@ -305,17 +290,9 @@ export default function BookingConfirmPage() {
                 <Button
                   size="lg"
                   className="mx-auto mt-7 block h-12 px-12 text-2xl"
-                  onClick={() => makePayment()}
-                  disabled={isPending}
+                  onClick={() => setIsPaymentDialogOpen(true)}
                 >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 inline-block animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Make Payment"
-                  )}
+                  Make Payment
                 </Button>
               </div>
             </Card>
@@ -351,6 +328,12 @@ export default function BookingConfirmPage() {
           </div>
         </div>
       </div>
+
+      <PaymentDialog
+        booking={booking}
+        isPaymentDialogOpen={isPaymentDialogOpen}
+        setIsPaymentDialogOpen={setIsPaymentDialogOpen}
+      />
     </div>
   );
 }

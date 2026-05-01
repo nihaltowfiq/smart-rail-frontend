@@ -5,13 +5,11 @@ import Link from "next/link";
 export default function Page() {
   return (
     <div className="relative min-h-[calc(100vh-65px)] w-full overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Decorative Elements */}
       <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-gradient-to-br from-blue-200 to-purple-300 opacity-20 blur-3xl" />
       <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-gradient-to-tr from-purple-200 to-blue-200 opacity-20 blur-3xl" />
 
       <div className="relative flex min-h-[calc(100vh-65px)] w-full items-center justify-center px-4 py-8 md:px-6">
         <div className="w-full max-w-md space-y-6">
-          {/* Header */}
           <div className="mb-8 text-center">
             <div className="mb-4 inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-3 shadow-lg">
               <Ticket className="h-8 w-8 text-white" />
@@ -22,10 +20,8 @@ export default function Page() {
             <p className="mt-2 text-gray-600">Join millions booking smarter</p>
           </div>
 
-          {/* Signup Form */}
           <SignupForm />
 
-          {/* Sign In Link */}
           <div className="space-y-4 text-center">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

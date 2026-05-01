@@ -43,8 +43,6 @@ export default function Page() {
     enabled: !!scheduleId,
   });
 
-  console.log({ scheduleId, seatsResponse });
-
   const handleBookNow = (schedule_id) => {
     setScheduleId(schedule_id);
     setSelected(null);
