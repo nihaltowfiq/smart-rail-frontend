@@ -4,9 +4,9 @@ import { SeatSelector } from "@/components/SeatSelector";
 import { TrainSearchForm } from "@/components/TrainSearchForm";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/client";
-import { cn } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, TimerIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 
 export type SearchTrainParams = {
@@ -74,12 +74,35 @@ export default function Page() {
               trains.map((train, i) => (
                 <Fragment key={i}>
                   <div className="mb-3 rounded border p-4">
-                    <p className="font-medium">
-                      {train.train_name} ({train.train_number})
-                    </p>
-                    <p>
-                      {train.from_station} → {train.to_station}
-                    </p>
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="font-medium">
+                          {train.train_name} ({train.train_number})
+                        </p>
+                        <p>
+                          {train.from_station} → {train.to_station}
+                        </p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div>
+                          <p className="text-muted-foreground">
+                            Departure Time
+                          </p>
+                          <p className="flex items-center font-semibold">
+                            <TimerIcon size={18} />
+                            {formatTime(train?.departure_time)}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Arrival Time</p>
+                          <p className="flex items-center font-semibold">
+                            <TimerIcon size={18} />
+                            {formatTime(train?.arrival_time)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="my-3 grid grid-cols-3 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Fare</p>
