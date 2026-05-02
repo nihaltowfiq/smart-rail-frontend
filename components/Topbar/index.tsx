@@ -10,6 +10,7 @@ import {
 import { clearUser } from "@/lib/auth";
 import { useUser } from "@/lib/hooks/useUser";
 import {
+  ChartNoAxesCombined,
   ChevronDown,
   Home,
   Info,
@@ -24,9 +25,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const menuItems = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "My Bookings", href: "/bookings", icon: Ticket },
-  { label: "Train Info", href: "/trains", icon: Info },
+  { label: "Home", href: "/", icon: Home, type: "user" },
+  { label: "My Bookings", href: "/bookings", icon: Ticket, type: "user" },
+  { label: "Train Info", href: "/trains", icon: Info, type: "user" },
+  {
+    label: "Reports",
+    href: "/reports",
+    icon: ChartNoAxesCombined,
+    type: "admin",
+  },
 ];
 
 export function Topbar() {
@@ -47,6 +54,16 @@ export function Topbar() {
     return pathname.startsWith(href);
   };
 
+  const visibleMenuItems = menuItems.filter((item) => {
+    if (item.type === "user") {
+      return true; // visible for all signed in users
+    }
+    if (item.type === "admin") {
+      return user?.role === "admin"; // visible only for admin
+    }
+    return false;
+  });
+
   return (
     <div className="w-full border-b border-purple-100 bg-linear-to-r from-white via-purple-50 to-blue-50 shadow-sm backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
@@ -64,7 +81,7 @@ export function Topbar() {
 
         {user?.token && (
           <div className="hidden items-center gap-8 md:flex">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.href);
               return (
@@ -140,7 +157,7 @@ export function Topbar() {
       {user?.token && mobileMenuOpen && (
         <div className="border-t border-purple-100 bg-linear-to-b from-purple-50 to-blue-50 md:hidden">
           <div className="space-y-1 px-4 py-3">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.href);
               return (
